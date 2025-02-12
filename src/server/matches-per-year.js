@@ -1,15 +1,17 @@
 const { CsvToJson } = require("./csvToJson");
-const { writeToFile } = require("./writeToFile");
 
 const matchesPerYear = () => {
-  const matches = CsvToJson("../data/matches.csv");
-  const matchesPerYear = matches.reduce((accumulator, match) => {
-    accumulator[match.season] = (accumulator[match.season] || 0) + 1;
-    return accumulator;
-  }, {});
-
-  writeToFile("matches_per_year", JSON.stringify(matchesPerYear));
+  const data = CsvToJson("../data/matches.csv");
+  const matchesPerYear = {};
+  for (match of data) {
+    if (matchesPerYear[match.season] === undefined) {
+      matchesPerYear[match.season] = 0;
+    }
+    if (matchesPerYear[match.season] === undefined) {
+      matchesPerYear[match.season] = 0;
+    }
+    matchesPerYear[match.season]++;
+  }
   return matchesPerYear;
 };
-console.log(matchesPerYear());
 module.exports = { matchesPerYear };

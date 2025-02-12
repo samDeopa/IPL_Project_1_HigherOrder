@@ -17,5 +17,5 @@ const CsvToJson = (csvPath) => {
 
   return jsonData;
 };
-
+CsvToJson("../data/deliveries.csv");
 module.exports = { CsvToJson };

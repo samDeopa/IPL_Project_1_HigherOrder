@@ -1,44 +1,35 @@
 const { CsvToJson } = require("./csvToJson");
-const { writeToFile } = require("./writeToFile");
 
 const manOfTheMatchPerSeason = () => {
-  const matches = CsvToJson("../data/matches.csv");
-  const manOfTheMatcheWonPerYear = matches.reduce((accumulator, match) => {
+  const data = CsvToJson("../data/matches.csv");
+  const manOfTheMatcheWonPerYear = {};
+  for (match of data) {
     if (match.result == "no result") {
-      return accumulator;
+      continue;
     }
-    const season = match.season;
-    const player = match.player_of_match;
-    if (accumulator[season] === undefined) {
-      accumulator[season] = {};
+    if (manOfTheMatcheWonPerYear[match.season] === undefined) {
+      manOfTheMatcheWonPerYear[match.season] = {};
     }
-
-    accumulator[season][player] = (accumulator[season][player] || 0) + 1;
-    return accumulator;
-  }, {});
-
-  const season = Object.keys(manOfTheMatcheWonPerYear);
-  const mostManOfTheMatch = season.reduce((accumulator, season) => {
-    const players = Object.keys(manOfTheMatcheWonPerYear[season]);
-    const topPlayer = players.reduce(
-      (accumulator, player) => {
-        return accumulator.manOfTheMatches >
-          manOfTheMatcheWonPerYear[season][player]
-          ? accumulator
-          : {
-              season: season,
-              player: player,
-              manOfTheMatches: manOfTheMatcheWonPerYear[season][player],
-            };
-      },
-      { season: "", player: "", manOfTheMatches: 0 }
-    );
-    accumulator[topPlayer.season] = topPlayer.player;
-    return accumulator;
-  }, {});
-
-  writeToFile("man_of_the_match_per_year", JSON.stringify(mostManOfTheMatch));
-  return mostManOfTheMatch;
+    if (
+      manOfTheMatcheWonPerYear[match.season][match.player_of_match] ===
+      undefined
+    ) {
+      manOfTheMatcheWonPerYear[match.season][match.player_of_match] = 0;
+    }
+    manOfTheMatcheWonPerYear[match.season][match.player_of_match]++;
+  }
+  for (let season in manOfTheMatcheWonPerYear) {
+    let topPlayer = "";
+    let manOfTheMatchCount = 0;
+    for (let player in manOfTheMatcheWonPerYear[season]) {
+      if (manOfTheMatcheWonPerYear[season][player] >= manOfTheMatchCount) {
+        topPlayer = player;
+        manOfTheMatchCount = manOfTheMatcheWonPerYear[season][player];
+      }
+      manOfTheMatcheWonPerYear[season] = player;
+    }
+  }
+  return manOfTheMatcheWonPerYear;
 };
 console.log(manOfTheMatchPerSeason());
 module.exports = { manOfTheMatchPerSeason };

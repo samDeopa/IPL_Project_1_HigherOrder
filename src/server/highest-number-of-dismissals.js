@@ -1,58 +1,40 @@
 const { CsvToJson } = require("./csvToJson");
-const { writeToFile } = require("./writeToFile");
 // get the top n economical bowlers
 const highestNumberOfDissmissal = () => {
-  const deliveries = CsvToJson("../data/deliveries.csv");
-  const dissmissals = deliveries.reduce((accumulator, delivery) => {
-    if (delivery.player_dismissed) {
-      if (accumulator[delivery.bowler] === undefined) {
-        accumulator[delivery.bowler] = {};
+  const deliveriesData = CsvToJson("../data/deliveries.csv");
+  const dissmissals = {};
+  for (bowl of deliveriesData) {
+    if (bowl.player_dismissed) {
+      if (dissmissals[bowl.bowler] === undefined) {
+        dissmissals[bowl.bowler] = {};
       }
-      if (accumulator[delivery.bowler][delivery.batsman] === undefined) {
-        accumulator[delivery.bowler][delivery.batsman] = 0;
+      if (dissmissals[bowl.bowler][bowl.batsman] === undefined) {
+        dissmissals[bowl.bowler][bowl.batsman] = 0;
       }
-      accumulator[delivery.bowler][delivery.batsman]++;
+      dissmissals[bowl.bowler][bowl.batsman]++;
     }
-    return accumulator;
-  }, {});
+  }
+  let highestDissmissal = { bowler: "", batsman: "", dissmissals: 0 };
 
-  const bowlers = Object.keys(dissmissals);
-  let highestDissmissal = bowlers.reduce(
-    (accumulator, bowler) => {
-      const battters = Object.keys(dissmissals[bowler]);
-      const currentHighest = battters.reduce(
-        (accumulator, batsman) => {
-          accumulator =
-            accumulator.dissmissals > dissmissals[bowler][batsman]
-              ? accumulator
-              : {
-                  bowler: bowler,
-                  batsman: batsman,
-                  dissmissals: dissmissals[bowler][batsman],
-                };
-          return accumulator;
-        },
-        {
-          bowler: "",
-          batsman: "",
-          dissmissals: 0,
-        }
-      );
-
-      return accumulator.dissmissals > currentHighest.dissmissals
-        ? accumulator
-        : currentHighest;
-    },
-    {
-      bowler: "",
-      batsman: "",
-      dissmissals: 0,
+  for (bowler in dissmissals) {
+    let player = "";
+    let playerDissmissals = 0;
+    for (batsman in dissmissals[bowler]) {
+      if (dissmissals[bowler][batsman] >= playerDissmissals) {
+        player = batsman;
+        playerDissmissals = dissmissals[bowler][batsman];
+      }
     }
-  );
-  writeToFile(
-    "hightest_number_of_dissmissals",
-    JSON.stringify(highestDissmissal)
-  );
+    dissmissals[bowler] = { [player]: playerDissmissals };
+    if (playerDissmissals >= highestDissmissal.dissmissals) {
+      highestDissmissal = {
+        bowler: bowler,
+        batsman: player,
+        dissmissals: playerDissmissals,
+      };
+    }
+  }
+
   return highestDissmissal;
 };
 console.log(highestNumberOfDissmissal());

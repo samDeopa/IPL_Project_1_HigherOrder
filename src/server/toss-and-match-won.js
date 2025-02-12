@@ -1,15 +1,16 @@
 const { CsvToJson } = require("./csvToJson");
-const { writeToFile } = require("./writeToFile");
 
 const tossAndMatchWon = () => {
-  const matches = CsvToJson("../data/matches.csv");
-  const matchesAndTossWon = matches.reduce((accumulator, match) => {
+  const data = CsvToJson("../data/matches.csv");
+  const matchesAndTossWon = {};
+  for (match of data) {
     if (match.toss_winner == match.winner) {
-      accumulator[match.winner] = (accumulator[match.winner] || 0) + 1;
+      if (matchesAndTossWon[match.winner] === undefined) {
+        matchesAndTossWon[match.winner] = 0;
+      }
+      matchesAndTossWon[match.winner]++;
     }
-    return accumulator;
-  }, {});
-  writeToFile("toss_and_match_won", JSON.stringify(matchesAndTossWon));
+  }
   return matchesAndTossWon;
 };
 console.log(tossAndMatchWon());

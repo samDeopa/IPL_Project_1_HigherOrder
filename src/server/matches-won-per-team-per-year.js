@@ -1,24 +1,20 @@
 const { CsvToJson } = require("./csvToJson");
-const { writeToFile } = require("./writeToFile");
 
 const matchesWonPerYearPerTeam = () => {
-  const matches = CsvToJson("../data/matches.csv");
-
-  const matchesWonPerYear = matches.reduce((accumulator, match) => {
+  const data = CsvToJson("../data/matches.csv");
+  const matchesWonPerYear = {};
+  for (match of data) {
     if (match.result == "no result") {
-      return accumulator;
+      continue;
     }
-    if (accumulator[match.winner] === undefined) {
-      accumulator[match.winner] = {};
+    if (matchesWonPerYear[match.winner] === undefined) {
+      matchesWonPerYear[match.winner] = {};
     }
-    accumulator[match.winner][match.season] =
-      (accumulator[match.winner][match.season] || 0) + 1;
-    return accumulator;
-  }, {});
-  writeToFile(
-    "matches_won_per_team_per_year",
-    JSON.stringify(matchesWonPerYear)
-  );
+    if (matchesWonPerYear[match.winner][match.season] === undefined) {
+      matchesWonPerYear[match.winner][match.season] = 0;
+    }
+    matchesWonPerYear[match.winner][match.season]++;
+  }
   return matchesWonPerYear;
 };
 console.log(matchesWonPerYearPerTeam());
