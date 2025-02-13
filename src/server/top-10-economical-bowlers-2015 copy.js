@@ -4,9 +4,9 @@ const topEconomicalBowler = (n) => {
   const deliveriesData = CsvToJson("../data/deliveries.csv");
   const matchData = CsvToJson("../data/matches.csv");
   let matchIdSeasonMap = {};
-  matchData.map((match) => {
+  for (match of matchData) {
     matchIdSeasonMap[match.id] = match.season;
-  });
+  }
   const bowlerEconomy = {};
   for (bowl of deliveriesData) {
     if (matchIdSeasonMap[bowl.match_id] == 2015) {
@@ -21,7 +21,7 @@ const topEconomicalBowler = (n) => {
   for (bowlerName in bowlerEconomy) {
     EconomyArray.push([
       bowlerName,
-      bowlerEconomy[bowlerName][0] / bowlerEconomy[bowlerName][1],
+      (bowlerEconomy[bowlerName][0] / bowlerEconomy[bowlerName][1]).toFixed(2),
     ]);
   }
   EconomyArray.sort((a, b) => a[1] - b[1]);

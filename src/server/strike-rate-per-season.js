@@ -5,9 +5,9 @@ const strikeRatePerSeason = () => {
   const deliveriesData = CsvToJson("../data/deliveries.csv");
 
   matchIdSeasonMap = {};
-  matchData.map((match) => {
+  for (match of matchData) {
     matchIdSeasonMap[match.id] = match.season;
-  });
+  }
   const strikeRatePerYear = {};
   for (bowl of deliveriesData) {
     const season = matchIdSeasonMap[bowl.match_id];

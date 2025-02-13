@@ -4,9 +4,9 @@ const topEconomicalBowler = () => {
   const deliveriesData = CsvToJson("../data/deliveries.csv");
   const matchData = CsvToJson("../data/matches.csv");
   let matchIdSeasonMap = {};
-  matchData.map((match) => {
+  for (match of matchData) {
     matchIdSeasonMap[match.id] = match.season;
-  });
+  }
   const bowlerEconomy = {};
   for (bowl of deliveriesData) {
     if (bowl.is_super_over != "0") {

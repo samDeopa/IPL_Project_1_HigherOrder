@@ -4,9 +4,9 @@ const extraRunConcededPerTeam = () => {
   const deliveriesData = CsvToJson("../data/deliveries.csv");
   const matchData = CsvToJson("../data/matches.csv");
   matchIdSeasonMap = {};
-  matchData.map((match) => {
+  for (match of matchData) {
     matchIdSeasonMap[match.id] = match.season;
-  });
+  }
   const extraRunsPerYear = {};
   for (bowl of deliveriesData) {
     const season = matchIdSeasonMap[bowl.match_id];
