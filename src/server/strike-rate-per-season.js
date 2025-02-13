@@ -15,11 +15,21 @@ const strikeRatePerSeason = () => {
       strikeRatePerYear[bowl.batsman] = {};
     }
     if (strikeRatePerYear[bowl.batsman][season] === undefined) {
-      strikeRatePerYear[bowl.batsman][season] = 0;
+      strikeRatePerYear[bowl.batsman][season] = [0, 0];
     }
-    strikeRatePerYear[bowl.batsman][season] += parseInt(bowl.batsman_runs);
+    strikeRatePerYear[bowl.batsman][season][0] += parseInt(bowl.batsman_runs);
+    strikeRatePerYear[bowl.batsman][season][1]++;
   }
 
+  for (player in strikeRatePerYear) {
+    for (seaon in strikeRatePerYear[player]) {
+      strikeRatePerYear[player][seaon] = (
+        (strikeRatePerYear[player][seaon][0] /
+          strikeRatePerYear[player][seaon][1]) *
+        100
+      ).toFixed(2);
+    }
+  }
   return strikeRatePerYear;
 };
 console.log(strikeRatePerSeason());
