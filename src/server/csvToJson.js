@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const CsvToJson = (csvPath) => {
+const csvToJson = (csvPath) => {
   const data = fs.readFileSync(csvPath, "utf-8").replace(/\r/g, "").split("\n");
 
   const columns = data[0].split(",");
@@ -18,4 +18,4 @@ const CsvToJson = (csvPath) => {
   return jsonData;
 };
 
-module.exports = { CsvToJson };
+module.exports = { csvToJson };

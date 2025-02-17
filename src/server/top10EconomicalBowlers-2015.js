@@ -1,8 +1,7 @@
-const { CsvToJson } = require("./csvToJson");
+const { csvToJson } = require("./csvToJson");
+
 // get the top n economical bowlers
-const topEconomicalBowler = (n) => {
-  const deliveries = CsvToJson("../data/deliveries.csv");
-  const matches = CsvToJson("../data/matches.csv");
+const topEconomicalBowler = (matches, deliveries, n) => {
   let matchIdSeasonMap = {};
   matches.map((match) => {
     matchIdSeasonMap[match.id] = match.season;
@@ -11,10 +10,10 @@ const topEconomicalBowler = (n) => {
     const bowler = delivery.bowler;
     if (matchIdSeasonMap[delivery.match_id] == 2015) {
       if (accumulator[bowler] == undefined) {
-        accumulator[bowler] = [0, 0];
+        accumulator[bowler] = { runs: 0, deliveries: 0 };
       }
-      accumulator[bowler][0] += parseInt(delivery.batsman_runs);
-      accumulator[bowler][1]++;
+      accumulator[bowler].runs += parseInt(delivery.batsman_runs);
+      accumulator[bowler].deliveries += 1;
     }
     return accumulator;
   }, {});
@@ -23,7 +22,9 @@ const topEconomicalBowler = (n) => {
   const EconomyArray = bowlers.reduce((accumulator, bowlerName) => {
     accumulator.push([
       bowlerName,
-      (bowlerEconomy[bowlerName][0] / bowlerEconomy[bowlerName][1]).toFixed(2),
+      (
+        bowlerEconomy[bowlerName].runs / bowlerEconomy[bowlerName].deliveries
+      ).toFixed(2),
     ]);
     return accumulator;
   }, []);
@@ -31,5 +32,11 @@ const topEconomicalBowler = (n) => {
   EconomyArray.sort((a, b) => a[1] - b[1]);
   return EconomyArray.slice(0, n);
 };
-console.log(topEconomicalBowler(10));
+console.log(
+  topEconomicalBowler(
+    csvToJson("../data/matches.csv"),
+    csvToJson("../data/deliveries.csv"),
+    10
+  )
+);
 module.exports = { topEconomicalBowler };

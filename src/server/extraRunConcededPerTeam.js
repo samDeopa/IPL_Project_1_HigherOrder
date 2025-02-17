@@ -1,16 +1,11 @@
-const { CsvToJson } = require("./csvToJson");
-const { writeToFile } = require("./writeToFile");
-
-const extraRunConcededPerTeam = () => {
-  const deliveries = CsvToJson("../data/deliveries.csv");
-  const matchs = CsvToJson("../data/matches.csv");
+const extraRunConcededPerTeam = (matches, deliveries, year) => {
   matchIdSeasonMap = {};
-  matchs.map((match) => {
+  matches.map((match) => {
     matchIdSeasonMap[match.id] = match.season;
   });
   const extraRunsPerYear = deliveries.reduce((accumulator, delivery) => {
     const season = matchIdSeasonMap[delivery.match_id];
-    if (season === "2016") {
+    if (season == year) {
       accumulator[delivery.bowling_team] =
         (accumulator[delivery.bowling_team] || 0) +
         parseInt(delivery.extra_runs);
@@ -18,8 +13,6 @@ const extraRunConcededPerTeam = () => {
     return accumulator;
   }, {});
 
-  writeToFile("extra_runs_per_year", JSON.stringify(extraRunsPerYear));
   return extraRunsPerYear;
 };
-console.log(extraRunConcededPerTeam());
 module.exports = { extraRunConcededPerTeam };

@@ -1,8 +1,4 @@
-const { CsvToJson } = require("./csvToJson");
-const { writeToFile } = require("./writeToFile");
-
-const manOfTheMatchPerSeason = () => {
-  const matches = CsvToJson("../data/matches.csv");
+const manOfTheMatchPerSeason = (matches) => {
   const manOfTheMatcheWonPerYear = matches.reduce((accumulator, match) => {
     if (match.result == "no result") {
       return accumulator;
@@ -37,7 +33,6 @@ const manOfTheMatchPerSeason = () => {
     return accumulator;
   }, {});
 
-  writeToFile("man_of_the_match_per_year", JSON.stringify(mostManOfTheMatch));
   return mostManOfTheMatch;
 };
 console.log(manOfTheMatchPerSeason());
