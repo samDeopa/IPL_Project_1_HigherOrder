@@ -1,9 +1,8 @@
 const { CsvToJson } = require("./csvToJson");
 
-const manOfTheMatchPerSeason = () => {
-  const data = CsvToJson("../data/matches.csv");
+const manOfTheMatchPerSeason = (matches) => {
   const manOfTheMatcheWonPerYear = {};
-  for (match of data) {
+  for (match of matches) {
     if (match.result == "no result") {
       continue;
     }

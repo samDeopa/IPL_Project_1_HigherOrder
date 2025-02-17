@@ -1,9 +1,8 @@
 const { CsvToJson } = require("./csvToJson");
 // get the top n economical bowlers
-const highestNumberOfDissmissal = () => {
-  const deliveriesData = CsvToJson("../data/deliveries.csv");
+const highestNumberOfDissmissal = (deliveries) => {
   const dissmissals = {};
-  for (bowl of deliveriesData) {
+  for (bowl of deliveries) {
     if (bowl.player_dismissed) {
       if (dissmissals[bowl.bowler] === undefined) {
         dissmissals[bowl.bowler] = {};

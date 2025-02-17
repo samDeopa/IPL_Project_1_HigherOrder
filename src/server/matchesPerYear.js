@@ -1,12 +1,8 @@
 const { CsvToJson } = require("./csvToJson");
 
-const matchesPerYear = () => {
-  const data = CsvToJson("../data/matches.csv");
+const matchesPerYear = (matches) => {
   const matchesPerYear = {};
-  for (match of data) {
-    if (matchesPerYear[match.season] === undefined) {
-      matchesPerYear[match.season] = 0;
-    }
+  for (match of matches) {
     if (matchesPerYear[match.season] === undefined) {
       matchesPerYear[match.season] = 0;
     }

@@ -1,15 +1,13 @@
 const { CsvToJson } = require("./csvToJson");
 // get the top n economical bowlers
-const topEconomicalBowler = () => {
-  const deliveriesData = CsvToJson("../data/deliveries.csv");
-  const matchData = CsvToJson("../data/matches.csv");
+const topEconomicalBowler = (matches, deliveries, n) => {
   let matchIdSeasonMap = {};
-  for (match of matchData) {
+  for (match of matches) {
     matchIdSeasonMap[match.id] = match.season;
   }
   const bowlerEconomy = {};
-  for (bowl of deliveriesData) {
-    if (bowl.is_super_over != "0") {
+  for (bowl of deliveries) {
+    if (matchIdSeasonMap[bowl.match_id] == 2015) {
       if (bowlerEconomy[bowl.bowler] === undefined) {
         bowlerEconomy[bowl.bowler] = [0, 0];
       }
@@ -21,11 +19,11 @@ const topEconomicalBowler = () => {
   for (bowlerName in bowlerEconomy) {
     EconomyArray.push([
       bowlerName,
-      bowlerEconomy[bowlerName][0] / bowlerEconomy[bowlerName][1],
+      (bowlerEconomy[bowlerName][0] / bowlerEconomy[bowlerName][1]).toFixed(2),
     ]);
   }
   EconomyArray.sort((a, b) => a[1] - b[1]);
-  return EconomyArray[0];
+  return EconomyArray.slice(0, n);
 };
-console.log(topEconomicalBowler());
+console.log(topEconomicalBowler(10));
 module.exports = { topEconomicalBowler };

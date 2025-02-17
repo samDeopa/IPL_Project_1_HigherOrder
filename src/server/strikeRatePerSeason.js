@@ -1,15 +1,12 @@
 const { CsvToJson } = require("./csvToJson");
 
-const strikeRatePerSeason = () => {
-  const matchData = CsvToJson("../data/matches.csv");
-  const deliveriesData = CsvToJson("../data/deliveries.csv");
-
+const strikeRatePerSeason = (matches, deliveries) => {
   matchIdSeasonMap = {};
-  for (match of matchData) {
+  for (match of matches) {
     matchIdSeasonMap[match.id] = match.season;
   }
   const strikeRatePerYear = {};
-  for (bowl of deliveriesData) {
+  for (bowl of deliveries) {
     const season = matchIdSeasonMap[bowl.match_id];
     if (strikeRatePerYear[bowl.batsman] === undefined) {
       strikeRatePerYear[bowl.batsman] = {};
